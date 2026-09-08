@@ -315,15 +315,15 @@
     .modal-nav {
       position: absolute;
       top: 50%;
-      width: 52px;
-      height: 52px;
+      width: 40px;
+      height: 40px;
       padding: 0;
-      border: 1px solid rgba(255,255,255,.65);
+      border: 1px solid rgba(255,255,255,.38);
       border-radius: 50%;
-      background: rgba(2,11,24,.68);
-      color: var(--white);
+      background: rgba(2,11,24,.42);
+      color: rgba(255,255,255,.82);
       font-family: Georgia, serif;
-      font-size: 2.5rem;
+      font-size: 1.9rem;
       line-height: .8;
       cursor: pointer;
       transform: translateY(-50%);
@@ -331,12 +331,36 @@
     }
 
     .modal-nav:hover {
-      background: rgba(143,183,232,.82);
+      background: rgba(143,183,232,.62);
       transform: translateY(-50%) scale(1.05);
     }
 
     .modal-prev { left: 18px; }
     .modal-next { right: 18px; }
+
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,.45);
+      border-radius: 50%;
+      background: rgba(2,11,24,.52);
+      color: rgba(255,255,255,.9);
+      font-family: Arial, sans-serif;
+      font-size: 1.35rem;
+      font-weight: 300;
+      line-height: 1;
+      cursor: pointer;
+      transition: background .25s ease, transform .25s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(143,183,232,.62);
+      transform: scale(1.05);
+    }
 
     #dresscode {
       --image-y: 50%;
@@ -421,9 +445,10 @@
       }
 
       .modal img { max-width: 94%; max-height: 82%; }
-      .modal-nav { width: 46px; height: 46px; font-size: 2.2rem; }
+      .modal-nav { width: 38px; height: 38px; font-size: 1.8rem; }
       .modal-prev { left: 8px; }
       .modal-next { right: 8px; }
+      .modal-close { top: 12px; right: 12px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -530,6 +555,7 @@
   </footer>
 
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Galería ampliada">
+    <button class="modal-close" id="modal-close" type="button" aria-label="Cerrar galería">×</button>
     <button class="modal-nav modal-prev" id="modal-prev" type="button" aria-label="Foto anterior">‹</button>
     <img id="modal-img" src="" alt="Imagen ampliada">
     <button class="modal-nav modal-next" id="modal-next" type="button" aria-label="Foto siguiente">›</button>
@@ -588,6 +614,7 @@
 
     const modal = document.getElementById('modal');
     const modalImg = document.getElementById('modal-img');
+    const modalClose = document.getElementById('modal-close');
     const modalPrev = document.getElementById('modal-prev');
     const modalNext = document.getElementById('modal-next');
     const galleryImages = [...document.querySelectorAll('.gallery img')];
@@ -601,7 +628,15 @@
     }
 
     galleryImages.forEach((img, index) => {
-      img.addEventListener('click', () => showGalleryImage(index));
+      img.addEventListener('click', () => {
+        showGalleryImage(index);
+        modalClose.focus({ preventScroll: true });
+      });
+    });
+
+    modalClose.addEventListener('click', event => {
+      event.stopPropagation();
+      modal.style.display = 'none';
     });
 
     modalPrev.addEventListener('click', event => {
